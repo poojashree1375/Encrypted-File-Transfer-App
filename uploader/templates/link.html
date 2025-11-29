@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Your Download Link</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'uploader/style.css' %}">
+</head>
+
+<body>
+
+  <div class="background-header">
+    <h1>Download Link</h1>
+    <p>Link will disappear automatically after countdown ends.</p>
+  </div>
+
+  <div class="card">
+    <h2 class="center-text">Download Ready</h2>
+
+    <div class="info-box">
+      <p class="label">Download Link:</p>
+
+      <p id="downloadLink" class="download-url">{{ download_url }}</p>
+
+      <button id="copyBtn" class="copy-button" onclick="copyLink()">
+        Copy Link
+      </button>
+    </div>
+
+    <div class="timer-box">
+      <p class="label">Expires In:</p>
+      <p id="countdown" class="countdown">Loading...</p>
+    </div>
+  </div>
+
+<script>
+function copyLink() {
+  const link = document.getElementById("downloadLink").textContent.trim();
+  navigator.clipboard.writeText(link);
+
+  const btn = document.getElementById("copyBtn");
+  btn.textContent = "Link Copied";
+
+  setTimeout(() => {
+    btn.textContent = "Copy Link";
+  }, 2000);
+}
+
+const expiryTime = new Date("{{ file.expiry_datetime|date:'c' }}").getTime();
+
+const timer = setInterval(() => {
+  const now = new Date().getTime();
+  const diff = expiryTime - now;
+
+  if (diff <= 0) {
+    clearInterval(timer);
+    document.getElementById("countdown").innerHTML = "Expired";
+    return;
+  }
+
+  let hrs = Math.floor(diff / (1000 * 60 * 60));
+  let mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  let secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+  document.getElementById("countdown").innerHTML =
+    `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+}, 1000);
+</script>
+
+</body>
+</html>

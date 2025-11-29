@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload File</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'uploader/style.css' %}">
+</head>
+
+<body>
+
+    <div class="background-header">
+        <h1>Secure File Transfer</h1>
+        <p>Upload files safely and share them with auto-expiring download links.</p>
+    </div>
+
+    <div class="card">
+        <h2 class="center-text">Upload a File</h2>
+
+        <form method="POST" enctype="multipart/form-data" class="upload-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="upload-button">Upload</button>
+        </form>
+    </div>
+
+</body>
+</html>
